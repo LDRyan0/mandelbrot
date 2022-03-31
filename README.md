@@ -1,6 +1,6 @@
 # Mandelbrot
 
-A set of programs that produce the Mandelbrot using a variety HPC parrallelisation concepts with OpenMPI.
+A set of programs that produce the [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) using a variety HPC parrallelisation concepts with [OpenMPI](https://www.open-mpi.org/).
 
 1. Static (rectangular)
 2. Dynamic (master-worker) 
