@@ -17,6 +17,7 @@ int main(int argc, char*argv[]) {
 	float complex   z, kappa;
 	MPI_Status status;
 	MPI_Request request;
+	
 	/* Set up MPI */
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -31,7 +32,7 @@ int main(int argc, char*argv[]) {
 
 
 	if (rank == MASTER) {
-		/* Store extra elements to get perfect multiple of chunkSize */
+		/* Store extra elements to get smallest sufficient multiple of chunkSize */
 		domainSize = ((N * N - 1) / chunkSize + 1) * chunkSize;
 		
 		/* Master array */
@@ -44,30 +45,28 @@ int main(int argc, char*argv[]) {
 		while (startIdx < domainSize) {
 			/* Receive work from worker */
 			MPI_Recv(x, chunkSize, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-			tag = status.MPI_TAG;
-			memcpy(y + tag, x, chunkSize*sizeof(float)); /* copy in work, index stored in tag */
-			/* Send startIdx to worker asynchronously for new work */
+			memcpy(y + status.MPI_TAG, x, chunkSize*sizeof(float)); /* copy in work, index stored in tag */
+			
+			/* Send startIdx back to worker we just received from for new work */
 			MPI_Send(&startIdx, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 			startIdx += chunkSize;
 		}
 
+		/* Once all work has been allocated collect final work and communicate all processes to stop */
 		startIdx = -1;
 		loop = 1;
-		printf("Wrapping up...\n");
-		/* Once all work has been allocated collect final work and communicate all processes to stop */
-		while (loop < ncpu) {
+		while (loop < ncpu) { /* while loop instead of for loop so final work can come asychronously */
 			MPI_Recv(x, chunkSize, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-			tag = status.MPI_TAG;
-			memcpy(y + tag, x, chunkSize*sizeof(float)); /* copy in work, index stored in tag */
-			/* Send startIdx to worker for new work */
+			memcpy(y + status.MPI_TAG, x, chunkSize*sizeof(float)); /* copy in work, index stored in tag */
+			/* Send -1 to worker so it knows to stop */
 			MPI_Send(&startIdx, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 			loop += 1;
 		}
 
 		/* ------------------------------ IO ------------------------------ */
  
-		printf("Writing mandelbrot3.ppm\n");
-		fp = fopen ("mandelbrot3.ppm", "w");
+		printf("Writing mandelbrot2.ppm\n");
+		fp = fopen ("mandelbrot2.ppm", "w");
 		fprintf (fp, "P3\n%4d %4d\n255\n", N, N);
 	    
 		for (loop=0; loop<N*N; loop++) 
@@ -89,7 +88,7 @@ int main(int argc, char*argv[]) {
 	if (rank != MASTER) {
 		startIdx = (rank - 1) * chunkSize; /* For initial work */
  		
-		while (startIdx >= 0) { /* Stop when processing finished */
+		while (startIdx >= 0) { /* As we receive -1 when processing finished */
 			for (loop=0; loop < chunkSize; loop++) {
 				pos = loop + startIdx;
 				i=pos/N;

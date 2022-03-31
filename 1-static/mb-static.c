@@ -46,8 +46,8 @@ int main(int argc, char*argv[]) {
 /* ----------------------------------------------------------------*/
  
 	if(rank == 0) { 
-	    printf("Writing mandelbrot2.ppm\n");
-	    fp = fopen ("mandelbrot2.ppm", "w");
+	    printf("Writing mandelbrot1.ppm\n");
+	    fp = fopen ("mandelbrot1.ppm", "w");
 	    fprintf (fp, "P3\n%4d %4d\n255\n", N, N);
 	    
 	    for (loop=0; loop<N*N; loop++) 

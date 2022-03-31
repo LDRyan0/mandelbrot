@@ -38,8 +38,8 @@ int main() {
 
 /* ----------------------------------------------------------------*/
   
-    printf("Writing mandelbrot.ppm\n");
-    fp = fopen ("mandelbrot.ppm", "w");
+    printf("Writing mandelbrot0.ppm\n");
+    fp = fopen ("mandelbrot0.ppm", "w");
     fprintf (fp, "P3\n%4d %4d\n255\n", N, N);
     
     for (i=0; i<N; i++) 
