@@ -90,7 +90,7 @@ int main(int argc, char*argv[]) {
  		
 		while (startIdx >= 0) { /* As we receive -1 when processing finished */
 			for (loop=0; loop < chunkSize; loop++) {
-				pos = loop + startIdx;
+				pos =  startIdx + loop;
 				i=pos/N;
 				j=pos%N;
 				z=kappa= (4.0*(i-N/2))/N + (4.0*(j-N/2))/N * I;
