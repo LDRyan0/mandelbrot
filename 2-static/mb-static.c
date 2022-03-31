@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N 8000
+#define N 800
 
 #include <mpi.h>
 #include <stdio.h>
@@ -22,7 +22,6 @@ int main(int argc, char*argv[]) {
 	MPI_Comm_size(MPI_COMM_WORLD, &ncpu);
 	
 	groupSize = N * N / ncpu;
-	printf("ncpu = %d\n", ncpu);
 
 	/* Allocate (N*stripSize) array */ 
     x=(float *)malloc(groupSize*sizeof(float));

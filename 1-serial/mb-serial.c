@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N	8000
+#define N	800
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 
 /* ----------------------------------------------------------------*/
 
-main() {
+int main() {
     int	   i,j,k,green,blue,tenth;
     float  **x;
     FILE   *fp;
@@ -59,4 +59,5 @@ main() {
     for (i=0; i<N; i++)
         free(x[i]);
     free(x);
+	return 0;
 }

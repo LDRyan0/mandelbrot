@@ -1,2 +1,4 @@
+# all compiled programs (compiled binaries)
 *.out
+# all PPM images (file size too large)
 *.ppm
