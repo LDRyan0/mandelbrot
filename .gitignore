@@ -2,3 +2,5 @@
 *.out
 # all PPM images (file size too large)
 *.ppm
+# all swap files
+*.swp
