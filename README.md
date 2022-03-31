@@ -1,6 +1,6 @@
 # Mandelbrot
 
-A set of programs that produce the [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) as a basic PPM image using a variety HPC parrallelisation concepts with [OpenMPI](https://www.open-mpi.org/).
+A set of programs that produce the [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) as a PPM image using a variety HPC parrallelisation concepts with [OpenMPI](https://www.open-mpi.org/).
 
 1. Serial (naive)
 2. Block partitioning (static)
