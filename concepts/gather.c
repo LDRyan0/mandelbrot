@@ -19,16 +19,23 @@ int main(int argc, char* argv[]) {
 		x[i] = i + rank*10;
 	}
 	
+	printf("(%d): [ ", rank);
+	for (i = 0; i < 10; i++) {
+		printf("%d ", x[i]);  	
+	}
+	printf("]\n");
+	
 	y = (int*)malloc(ncpu*10*sizeof(int));
 
 	MPI_Gather(x, 10, MPI_INT, y, 10, MPI_INT, 0, MPI_COMM_WORLD);
 
 	if (rank == 0) {
-		printf("[ ");
+		printf("\nMPI_Gather(x, 10, MPI_INT, y, 10, MPI_INT, 0, MPI_COMM_WORLD);\n\n");
+		printf("(0): [ ");
 		for (i = 0; i < ncpu*10; i++) {
 			printf("%d ", y[i]);  	
 		}
-		printf("]");
+		printf("]\n");
 	}
 	free(y);	
 

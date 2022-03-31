@@ -37,7 +37,7 @@ int main (int argc, char*argv[]) {
 	
 	memcpy(y+4, x, 4*sizeof(int));
 	 
-	printf("memcpy(y+4, x, 4*sizeof(int))\n");
+	printf("\nmemcpy(y+4, x, 4*sizeof(int))\n\n");
 	printf("y = [ ");
 	for (i = 0; i < 10; i++) {
 		printf("%d ", y[i]);
