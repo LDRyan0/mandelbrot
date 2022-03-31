@@ -1,6 +1,11 @@
-# all compiled programs (compiled binaries)
+# all compiled binaries with no extension
+*
+!*.*
+!*/
+# all compiled binaries with .out extension
 *.out
 # all PPM images (file size too large)
 *.ppm
 # all swap files
 *.swp
+

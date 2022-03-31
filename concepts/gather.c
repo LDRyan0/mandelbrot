@@ -1,5 +1,4 @@
-
-
+/* Demonstration of the MPI_Gather function */
 
 #include <mpi.h>
 #include <stdio.h>

@@ -12,7 +12,7 @@
 /* ----------------------------------------------------------------*/
 
 int main(int argc, char*argv[]) {
-	int	   i, j, k, green, blue, loop, chunkSize, domainSize, rank, ncpu, startIdx, tag;
+	int	   i, j, k, green, blue, loop, chunkSize, domainSize, rank, ncpu, startIdx, tag, pos;
 	FILE   *fp;
 	float complex   z, kappa;
 	MPI_Status status;
@@ -29,6 +29,7 @@ int main(int argc, char*argv[]) {
 	float *x;	
 	x = (float *)malloc(chunkSize*sizeof(float));
 
+
 	if (rank == MASTER) {
 		/* Store extra elements to get perfect multiple of chunkSize */
 		domainSize = ((N * N - 1) / chunkSize + 1) * chunkSize;
@@ -37,9 +38,7 @@ int main(int argc, char*argv[]) {
 		float *y;
 		y = (float *)malloc(domainSize*sizeof(float));
 		
-
-		/* Workers already complete one "chunk" of work without communication
-		   => begin startIdx at (ncpu-1)*chunkSize */
+		/* Workers already complete one "chunk" of work without communication */
 		startIdx = (ncpu - 1) * chunkSize;
 
 		while (startIdx < domainSize) {
@@ -88,8 +87,6 @@ int main(int argc, char*argv[]) {
 	}
 
 	if (rank != MASTER) {
-		int pos; /* For the actual position in the 2D master array */
-
 		startIdx = (rank - 1) * chunkSize; /* For initial work */
  		
 		while (startIdx >= 0) { /* Stop when processing finished */

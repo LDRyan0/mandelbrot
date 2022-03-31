@@ -1,3 +1,6 @@
+/* 	Demonstration of how the copy from worker into master array is
+	done using memcpy() */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
