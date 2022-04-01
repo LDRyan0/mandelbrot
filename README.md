@@ -7,4 +7,12 @@ A set of HPC C programs that produce the [Mandelbrot set](https://en.wikipedia.o
 2. Master-worker (dynamic) 
 3. Cyclic partitioning (static)
 
+## Example usage
+
+```bash
+cd 2-master-worker/
+mpicc -lm mb-master-worker.c -o master-worker
+srun -n 4 master-worker
+```
+
 <img src="https://user-images.githubusercontent.com/86461236/161067232-41d770c1-7615-4e13-b937-e3ace8c7aef7.JPG" height="300"/>
