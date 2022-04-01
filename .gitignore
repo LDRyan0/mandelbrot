@@ -8,4 +8,6 @@
 *.ppm
 # all swap files
 *.swp
+# all results
+results/
 
