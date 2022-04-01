@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N	800
+#define N	8000
 
 #include <stdio.h>
 #include <stdlib.h>
