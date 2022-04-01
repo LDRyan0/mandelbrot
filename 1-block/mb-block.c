@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N 800
+#define N 8000
 
 #include <mpi.h>
 #include <stdio.h>
@@ -10,11 +10,18 @@
 /* ----------------------------------------------------------------*/
 
 int main(int argc, char*argv[]) {
-    int	   i, j, k, loop, groupSize, rank, ncpu, pos, green, blue;
+    int	   i, j, k, loop, groupSize, rank, ncpu, pos;
     float  *x, *y;
-	double time1, time2, calcTime, waitTime, commTime;
-    FILE   *fp;
     float complex   z, kappa;
+
+	#ifndef TIME
+    FILE   *fp;
+	int green, blue;
+	#endif
+
+	#ifdef TIME
+	double time1, time2, calcTime, waitTime, commTime;
+	#endif
 
 	/* Set up MPI */
 	MPI_Init(&argc, &argv);
@@ -58,7 +65,7 @@ int main(int argc, char*argv[]) {
 	#ifdef TIME
 	time2 = MPI_Wtime();
 	commTime = time2 - time1;
-	printf("Process %d s\n", rank);
+	printf("Process %d\n", rank);
 	printf("\tCalc: %lf s\n", calcTime);
 	printf("\tWait: %lf s\n", waitTime);
 	printf("\tComm: %lf s\n", commTime);
