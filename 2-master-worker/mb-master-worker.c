@@ -12,11 +12,10 @@
 /* ----------------------------------------------------------------*/
 
 int main(int argc, char*argv[]) {
-	int	   i, j, k, green, blue, loop, chunkSize, domainSize, rank, ncpu, startIdx, tag, pos;
+	int	   i, j, k, green, blue, loop, chunkSize, domainSize, rank, ncpu, startIdx, pos;
 	FILE   *fp;
 	float complex   z, kappa;
 	MPI_Status status;
-	MPI_Request request;
 	
 	/* Set up MPI */
 	MPI_Init(&argc, &argv);

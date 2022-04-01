@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 
+int domain(int size, int chunkSize) {
+	return ((size - 1) / chunkSize + 1) * chunkSize;
+}
+
 int main(int argc, char* argv[]) {
 	printf("domain( 98,20) = %5d\n", domain(98, 20));
 	printf("domain( 99,20) = %5d\n", domain(99, 20));
@@ -16,7 +20,4 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-int domain(int size, int chunkSize) {
-	return ((size - 1) / chunkSize + 1) * chunkSize;
-}
 
