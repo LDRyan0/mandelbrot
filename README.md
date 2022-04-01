@@ -13,6 +13,7 @@ A set of HPC C programs that produce the [Mandelbrot set](https://en.wikipedia.o
 cd 2-master-worker/
 mpicc -lm mb-master-worker.c -o master-worker
 srun -n 4 master-worker
+xli mandelbrot2.ppm
 ```
 
 <img src="https://user-images.githubusercontent.com/86461236/161067232-41d770c1-7615-4e13-b937-e3ace8c7aef7.JPG" height="300"/>
