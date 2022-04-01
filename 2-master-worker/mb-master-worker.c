@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N 8000
+#define N 800
 #define MASTER 0
 
 #include <mpi.h>
