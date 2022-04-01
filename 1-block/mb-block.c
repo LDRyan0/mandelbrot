@@ -10,12 +10,12 @@
 /* ----------------------------------------------------------------*/
 
 int main(int argc, char*argv[]) {
-    int	   i,j,k,green,blue,loop,groupSize,rank,ncpu,pos;
+    int	   i, j, k, loop, groupSize, rank, ncpu, pos, green, blue;
     float  *x, *y;
+	double time1, time2, calcTime, waitTime, commTime;
     FILE   *fp;
     float complex   z, kappa;
 
-	
 	/* Set up MPI */
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -23,9 +23,15 @@ int main(int argc, char*argv[]) {
 	
 	groupSize = N * N / ncpu;
 
-	/* Allocate (N*stripSize) array */ 
-    x=(float *)malloc(groupSize*sizeof(float));
-  	
+	/* Allocate arrays */ 
+    x=(float *)malloc(groupSize*sizeof(float));	
+	if (rank == 0) {
+		y = (float *)malloc(N*N*sizeof(float));	
+	}
+	
+	#ifdef TIME
+	time1 = MPI_Wtime();
+	#endif
     for (loop=0; loop<groupSize; loop++) {
 	    pos = loop+groupSize*rank;
 		i=pos/N;
@@ -38,13 +44,31 @@ int main(int argc, char*argv[]) {
 	  
 	    x[loop]= log((float)k) / log((float)MAXITER);
 	}
-	
-	y = (float *)malloc(N*N*sizeof(float));
+
+	#ifdef TIME
+	time2 = MPI_Wtime();
+	calcTime = time2 - time1;
+	MPI_Barrier(MPI_COMM_WORLD);
+	time1 = MPI_Wtime();
+	waitTime = time1 - time2;
+	#endif
+
 	MPI_Gather(x, groupSize, MPI_FLOAT, y, groupSize, MPI_FLOAT, 0, MPI_COMM_WORLD);
+	
+	#ifdef TIME
+	time2 = MPI_Wtime();
+	commTime = time2 - time1;
+	printf("Process %d s\n", rank);
+	printf("\tCalc: %lf s\n", calcTime);
+	printf("\tWait: %lf s\n", waitTime);
+	printf("\tComm: %lf s\n", commTime);
+	#endif
+
 
 
 /* ----------------------------------------------------------------*/
- 
+	
+	#ifndef TIME
 	if(rank == 0) { 
 	    printf("Writing mandelbrot1.ppm\n");
 	    fp = fopen ("mandelbrot1.ppm", "w");
@@ -60,12 +84,13 @@ int main(int argc, char*argv[]) {
 		    }
 	    
 	    fclose(fp);
+		free(y);
 	}
+	#endif
 
 /* ----------------------------------------------------------------*/
 
     free(x);
-	free(y);
 
 	MPI_Finalize();
 	return 0;

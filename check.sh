@@ -10,7 +10,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-echo "Checking all image files..."
+echo "Checking all .ppm image files..."
 # compile all programs
 for f in $CHECK
 do	
@@ -22,9 +22,3 @@ do
 		echo -e "${f##*/}: ${RED}FAILED${NC}"
 	fi
 done
-
-
-
-
-
-

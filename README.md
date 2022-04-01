@@ -7,14 +7,26 @@ A set of HPC C programs that produce the [Mandelbrot set](https://en.wikipedia.o
 2. Master-worker (dynamic) 
 3. Cyclic partitioning (static)
 
-## Example usage
+# Usage
+### Standard usage
 
 ```bash
 git clone git@github.com:LDRyan0/mandelbrot.git
+./make.sh
 cd mandelbrot/2-master-worker/
-mpicc -lm mb-master-worker.c -o master-worker
 srun -n 4 master-worker
 xli mandelbrot2.ppm
 ```
+### Timing usage
+All programs utilise conditional compilation, add the `TIME` flag to the make script to enable timing functionality and disable image output.
+```bash
+./make.sh TIME
+```
+### Output validation
+Generate all images and then run the checking script to validate output. Uses `diff` on the .ppm files.
+```bash
+./check.sh
+```
+
 
 <img src="https://user-images.githubusercontent.com/86461236/161067232-41d770c1-7615-4e13-b937-e3ace8c7aef7.JPG" height="300"/>
