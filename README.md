@@ -10,7 +10,8 @@ A set of HPC C programs that produce the [Mandelbrot set](https://en.wikipedia.o
 ## Example usage
 
 ```bash
-cd 2-master-worker/
+git clone git@github.com:LDRyan0/mandelbrot.git
+cd mandelbrot/2-master-worker/
 mpicc -lm mb-master-worker.c -o master-worker
 srun -n 4 master-worker
 xli mandelbrot2.ppm
