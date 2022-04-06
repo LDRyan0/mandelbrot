@@ -1,5 +1,5 @@
 #define MAXITER 1000
-#define N 800
+#define N 8000
 
 #include <mpi.h>
 #include <stdio.h>
@@ -90,7 +90,7 @@ int main(int argc, char*argv[]) {
 		time2 = MPI_Wtime();
 		times[1] += time2 - time1; /* included added work by process 0 to rearrange */
 
-		fp = fopen("cyclic-results.csv","w");
+		fp = fopen("results-cyclic.csv","w");
 		fprintf(fp, "rank,calcTime,waitTime,commTime\n"); /* .csv header */
 		for (i = 0; i < 4*ncpu; i+=4) {
 			fprintf(fp, "%d,%lf,%lf,%lf\n", (int)allTimes[i], allTimes[i+1], allTimes[i+2], allTimes[i+3]);

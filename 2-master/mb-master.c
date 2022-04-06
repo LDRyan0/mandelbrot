@@ -11,35 +11,25 @@
 
 /* ----------------------------------------------------------------*/
 
-int main(int argc, char*argv[]) {
-	int	   i, j, k, loop, chunkSize, domainSize, rank, ncpu, startIdx, pos;
+void mb_master_worker(int chunkSize) {
+	int	   i, j, k, loop, rank, ncpu, domainSize, startIdx, pos;
 	float complex   z, kappa;
 	MPI_Status status;
-
-	/* Unused variables cause errors in compilation due to -Werror standard*/
+	
 	#ifndef TIME
 	FILE   *fp;
-	int green, blue;
 	#endif
 
-	#ifdef TIME
-	double time1, time2, calcTime, commTime;
-	#endif
-
-	/* Set up MPI */
-	MPI_Init(&argc, &argv);
+	/* Unused variables cause errors in compilation due to -Werror standard*/
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &ncpu);
-			
-	/* All processes aware of chunksize */
-	chunkSize = 100000; 		
+	MPI_Comm_size(MPI_COMM_WORLD, &ncpu);		
 	
 	/* Working array */
 	float *x;	
 	x = (float *)malloc(chunkSize*sizeof(float));
 
-
 	if (rank == MASTER) {
+
 		/* Store extra elements to get smallest sufficient multiple of chunkSize */
 		domainSize = ((N * N - 1) / chunkSize + 1) * chunkSize;
 		
@@ -72,7 +62,6 @@ int main(int argc, char*argv[]) {
 			loop += 1;
 		}
 
-		/* ------------------------------ IO ------------------------------ */
 		#ifndef TIME
 		printf("Writing mandelbrot2.ppm\n");
 		fp = fopen ("mandelbrot2.ppm", "w");
@@ -90,8 +79,6 @@ int main(int argc, char*argv[]) {
 		fclose(fp);	
 		#endif
 
-		/* ---------------------------------------------------------------- */
-
 		free(y);
 	}
 
@@ -99,9 +86,6 @@ int main(int argc, char*argv[]) {
 		startIdx = (rank - 1) * chunkSize; /* For initial work */
  		
 		while (startIdx >= 0) { /* As we receive -1 when processing finished */
-			#ifdef TIME
-			time1 = MPI_Wtime();
-			#endif
 			for (loop=0; loop < chunkSize; loop++) {
 				pos =  startIdx + loop;
 				i=pos/N;
@@ -113,32 +97,53 @@ int main(int argc, char*argv[]) {
 			  
 				x[loop]= log((float)k) / log((float)MAXITER);
 			}
-			#ifdef TIME
-			time2 = MPI_Wtime();
-			calcTime += time2 - time1;
-			#endif
 			
 			/* Send completed work back to master, with startIdx in tag */
 			MPI_Send(x, chunkSize, MPI_FLOAT, MASTER, startIdx, MPI_COMM_WORLD);	
 			
 			/* Receive startIdx for new work, will be -1 if finished*/
 			MPI_Recv(&startIdx, 1, MPI_INT, MASTER, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-			#ifdef TIME
-			time1 = MPI_Wtime();
-			commTime += time1 - time2;
-			#endif
 		}
-		#ifdef TIME
-		printf("Process %d\n", rank);
-		printf("\tCalc: %lf s\n", calcTime);
-		printf("\tComm: %lf s\n", commTime);
-		#endif
-
-
 	}
-
 	free(x);	
+}
+
+int main(int argc, char*argv[]) {
+	int chunks[] = {10, 30, 100, 300, 1000, 3000, 10000, 30000, 100000, 300000, 1000000, 3000000};
+	int i, rank, ncpu;
+	double time1, time2, execTime;
+	
+	/* header */
+	FILE *fp;
+
+	fp = fopen("results-master.csv","w");
+	fprintf(fp, "chunkSize, execTime\n");
+
+	/* Set up MPI */
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &ncpu);	
+
+	for (i = 0; i < sizeof(chunks) / sizeof(chunks[0]); i++) {
+		#ifdef TIME
+		if (rank == 0) {
+			time1 = MPI_Wtime();
+		}
+		#endif
+		mb_master_worker(chunks[i]);
+		MPI_Barrier(MPI_COMM_WORLD);
+		#ifdef TIME
+		if (rank == 0) {
+			time2 = MPI_Wtime();
+			execTime = time2 - time1;
+			fprintf(fp,"%d,%lf\n", chunks[i], execTime);
+		}
+		MPI_Barrier(MPI_COMM_WORLD);
+		#endif
+	}
+	fclose(fp);
+
 	MPI_Finalize();
+
 	return 0;
 }
