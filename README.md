@@ -28,5 +28,6 @@ Generate all images and then run the checking script to validate output. Uses `d
 ./check.sh
 ```
 
-
-<img src="https://user-images.githubusercontent.com/86461236/161067232-41d770c1-7615-4e13-b937-e3ace8c7aef7.JPG" height="300"/>
+Mandelbrot Set Image | Example Timing Analysis
+|:-------------:|:------------:|
+<img src="https://user-images.githubusercontent.com/86461236/161067232-41d770c1-7615-4e13-b937-e3ace8c7aef7.JPG" height="300"/> | <img src="https://user-images.githubusercontent.com/86461236/183006337-c5954c4a-91d2-4dd5-9c07-3c5cc1470e6b.png" height="300"/>
